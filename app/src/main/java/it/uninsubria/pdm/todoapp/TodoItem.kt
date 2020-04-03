@@ -3,10 +3,15 @@ package it.uninsubria.pdm.todoapp
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TodoItem(todo:String) {
+class TodoItem() {
 
-    private val createOn:GregorianCalendar = GregorianCalendar()
-    private val todo:String = todo
+    var createOn:GregorianCalendar = GregorianCalendar()
+    var todo:String = ""
+    var id:Long = -1
+
+    constructor(todo:String):this(){
+        this.todo = todo
+    }
 
     @Override
     override fun toString():String {
