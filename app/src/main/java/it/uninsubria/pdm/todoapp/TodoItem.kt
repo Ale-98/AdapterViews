@@ -1,5 +1,6 @@
 package it.uninsubria.pdm.todoapp
 
+import android.content.ContentValues
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -11,6 +12,14 @@ class TodoItem() {
 
     constructor(todo:String):this(){
         this.todo = todo
+    }
+
+    fun getAsContentValues():ContentValues{
+        val cv = ContentValues()
+        cv.put(DBContract.TodoTable.KEY_ID, id)
+        cv.put(DBContract.TodoTable.KEY_TASK, todo)
+        cv.put(DBContract.TodoTable.KEY_DATE, createOn.timeInMillis)
+        return cv
     }
 
     @Override

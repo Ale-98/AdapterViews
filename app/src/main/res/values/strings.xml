@@ -2,4 +2,6 @@
     <string name="app_name">TodoApp</string>
     <string name="new_item">New Item</string>
     <string name="button_text">Add</string>
+    <string name="action_new_item">New Todo Item ...</string>
+    <string name="action_settings">Settings</string>
 </resources>
