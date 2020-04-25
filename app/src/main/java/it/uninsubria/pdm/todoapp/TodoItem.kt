@@ -9,6 +9,11 @@ class TodoItem() {
     var createOn:GregorianCalendar = GregorianCalendar()
     var todo:String = ""
     var id:Long = -1
+    var imgUrl:String = ""
+    var deadline : GregorianCalendar = GregorianCalendar()
+    fun dateToString(date: GregorianCalendar): String {
+        return SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN).format(date.getTime())
+    }
 
     constructor(todo:String):this(){
         this.todo = todo
@@ -19,6 +24,7 @@ class TodoItem() {
         cv.put(DBContract.TodoTable.KEY_ID, id)
         cv.put(DBContract.TodoTable.KEY_TASK, todo)
         cv.put(DBContract.TodoTable.KEY_DATE, createOn.timeInMillis)
+        cv.put(DBContract.TodoTable.KEY_DEADLINE, deadline.timeInMillis)
         return cv
     }
 

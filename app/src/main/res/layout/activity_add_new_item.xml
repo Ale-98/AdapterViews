@@ -12,6 +12,13 @@
         android:layout_height="wrap_content">
     </include>
 
+    <TextView
+        android:id="@+id/addDeadLineTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:text="@string/add_deadline_text"/>
+
     <EditText
         android:id="@+id/editNewTodo"
         android:layout_width="match_parent"

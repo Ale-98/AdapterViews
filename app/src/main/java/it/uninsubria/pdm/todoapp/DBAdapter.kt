@@ -41,6 +41,7 @@ class DBAdapter {
                 val createOn = GregorianCalendar()
                 createOn.setTimeInMillis(cursor.getLong(2))
                 task.createOn = createOn
+                //task.deadline = GregorianCalendar(cursor.getInt(3)))
                 items.add(0, task)
             }while(cursor.moveToNext())
         }

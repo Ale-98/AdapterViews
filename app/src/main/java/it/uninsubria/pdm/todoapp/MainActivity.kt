@@ -13,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.grid_activity_main.*
 import kotlinx.android.synthetic.main.tool_bar.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     // the array list containing the Todo items
     val todoItems = ArrayList<TodoItem>()
     // ArrayAdapter converts an ArrayList of Todo items into View items
-    lateinit var adapter:ArrayAdapter<TodoItem>
+    lateinit var adapter:TodoArrayAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, todoItems)
+        adapter = TodoArrayAdapter(this, todoItems)
         // View items are loaded into the ListView container.
         if(list_mode) list_view.adapter = adapter
         else grid_view.adapter = adapter
@@ -77,21 +80,28 @@ class MainActivity : AppCompatActivity() {
         // Make sure the request was successful
             if (resultCode == Activity.RESULT_OK) {
                 val returnValue = data?.getStringExtra("TODO_TASK")
+                val deadLine = data?.getStringExtra("TODO_DEADLINE")
+                val df = SimpleDateFormat("dd MM yyyy")
+                val date = df.parse(deadLine)
+                val cal = GregorianCalendar()
+                cal.setTime(date)
+
                 Log.d(MainActivity::class.java.name, "onActivityResult() -> $returnValue")
                 if (returnValue != null) {
-                    addNewItem(returnValue)
+                    addNewItem(returnValue, cal)
                 }
                 return
             }
         }
     }
 
-    fun addNewItem(text:String){
+    fun addNewItem(text:String, deadLine:GregorianCalendar){
         if(text == null || text.equals("")){
             Toast.makeText(applicationContext, "Empty Todo String", Toast.LENGTH_LONG).show()
             return
         }
         val newTodo = TodoItem(text)
+        newTodo.deadline = deadLine
         val dbAdapter = DBAdapter(this)
         dbAdapter.insertItem(newTodo)
 

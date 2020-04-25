@@ -4,4 +4,5 @@
     <string name="button_text">Add</string>
     <string name="action_new_item">New Todo Item ...</string>
     <string name="action_settings">Settings</string>
+    <string name="add_deadline_text">Click here to add deadline to your todo</string>
 </resources>
