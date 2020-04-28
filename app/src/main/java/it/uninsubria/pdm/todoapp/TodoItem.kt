@@ -6,6 +6,7 @@ import java.util.*
 
 class TodoItem() {
 
+    // Campi dei TodoItems
     var createOn:GregorianCalendar = GregorianCalendar()
     var todo:String = ""
     var id:Long = -1
@@ -19,12 +20,14 @@ class TodoItem() {
         this.todo = todo
     }
 
+    // Per ottenere un todoItem travestito da ContentValues, necessario per aggiunta di un TodoItem al DB
     fun getAsContentValues():ContentValues{
         val cv = ContentValues()
         cv.put(DBContract.TodoTable.KEY_ID, id)
         cv.put(DBContract.TodoTable.KEY_TASK, todo)
         cv.put(DBContract.TodoTable.KEY_DATE, createOn.timeInMillis)
         cv.put(DBContract.TodoTable.KEY_DEADLINE, deadline.timeInMillis)
+        cv.put(DBContract.TodoTable.KEY_IMAGE_URL, imgUrl)
         return cv
     }
 

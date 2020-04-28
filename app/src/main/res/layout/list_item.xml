@@ -63,8 +63,8 @@
             android:singleLine="false"
             android:text="message " />
     </LinearLayout>
-    <it.uninsubria.pdm.todoapp.CircleProgressBar
+    <it.uninsubria.pdm.todoapp.CircularProgressBar
         android:id="@+id/circleProgressBar"
         android:layout_width="0px"
-        android:layout_height="match_"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

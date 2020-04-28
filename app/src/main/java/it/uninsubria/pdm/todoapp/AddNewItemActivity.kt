@@ -16,12 +16,15 @@ class AddNewItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_new_item)
 
+        // Settaggi per includere la toolbar(messa in un XML a parte e inclusa nei layout usando tag 'include'
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Add new ToDo Item"
 
+        // Per dare focus alla textView per inserire la descrizione per il nuovo todo
         editNewTodo.requestFocus()
+        // Per aggiungere il date picker
         addDeadLineTextView.setOnClickListener {
             val c = Calendar.getInstance()
             val year = c.get(Calendar.YEAR)
@@ -36,10 +39,13 @@ class AddNewItemActivity : AppCompatActivity() {
         }
     }
 
+    // Per abilitare la back-arrow
+    // Crea intent in cui inserisce i dati da ritornare alla main activity e poi lo passa come argomento a setResult(...)
     override fun onSupportNavigateUp(): Boolean {
         val resultIntent = Intent()
         resultIntent.putExtra("TODO_TASK", editNewTodo.text.toString())
         resultIntent.putExtra("TODO_DEADLINE", addDeadLineTextView.text.toString())
+        resultIntent.putExtra("TODO_IMAGE_URL", imgUrlEditText.text.toString())
         Log.d("NewTodoActivity", "onSupportNavigateUp() -> " + editNewTodo.text)
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
