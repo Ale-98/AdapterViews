@@ -10,6 +10,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.grid_activity_main.*
 import kotlinx.android.synthetic.main.tool_bar.*
@@ -27,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     val todoItems = ArrayList<TodoItem>()
     // ArrayAdapter converts an ArrayList of Todo items into View items
     lateinit var adapter:TodoArrayAdapter
+
+    lateinit var auth:FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,21 @@ class MainActivity : AppCompatActivity() {
         // Assegna l'adapter alla listView
         if(list_mode) list_view.adapter = adapter
         else grid_view.adapter = adapter
+
+        // Inizializza autenticatore
+        auth = Firebase.auth
+    }
+
+    // Per verificare che l'utente sia loggato ogni volta che l'applicazione torna in primo piano
+    override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null)
+        val currentUser = auth.currentUser
+        if(currentUser == null) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     // Richiesto per aggiungere menu alla ToolBar
@@ -77,6 +97,10 @@ class MainActivity : AppCompatActivity() {
             val i = Intent(applicationContext, AddNewItemActivity::class.java)
             startActivityForResult(i, NEW_ITEM_REQUEST)
             return true
+        } else if(id == R.id.action_logout){
+            // Esegue il logout usando l'autenticatore firebase e termina l'activity corrente
+            auth.signOut()
+            finish()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -95,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                 val df = SimpleDateFormat("dd MM yyyy")
                 val date = df.parse(deadLine)
                 val cal = GregorianCalendar()
-                cal.setTime(date)
+                cal.time = date
 
                 Log.d(MainActivity::class.java.name, "onActivityResult() -> $returnValue")
                 if (returnValue != null) {
@@ -107,15 +131,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun addNewItem(text:String, deadLine:GregorianCalendar, imgUrl:String?){
-        if(text == null || text.equals("")){
+    private fun addNewItem(text:String, deadLine:GregorianCalendar, imgUrl:String?){
+        if(text == ""){
             Toast.makeText(applicationContext, "Empty Todo String", Toast.LENGTH_LONG).show()
             return
         }
         // Crea nuovo todoItem e lo aggiunge al DB
         val newTodo = TodoItem(text)
         newTodo.deadline = deadLine
-        if(imgUrl!=null && !imgUrl.isEmpty()){
+        if(imgUrl!=null && imgUrl.isNotEmpty()){
             newTodo.imgUrl = imgUrl
         }
         val dbAdapter = DBAdapter(this)
@@ -130,7 +154,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // On long click for deleting todos
-    fun onLongClickDeleteItems(position:Int){
+    private fun onLongClickDeleteItems(position:Int){
         val item = list_view.getItemAtPosition(position) as TodoItem
         Toast.makeText(applicationContext, "Deleted item: $item", Toast.LENGTH_LONG).show()
         val dbAdapter = DBAdapter(this)
